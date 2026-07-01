@@ -1,5 +1,4 @@
-import Link from "next/link";
-import ArticleCard from "@/components/ArticleCard";
+import CategoryGroups from "@/components/CategoryGroups";
 import { getDigest, getDigestDates } from "@/lib/data";
 
 export const dynamic = "force-static";
@@ -16,7 +15,7 @@ export default function Home() {
           CPA뉴스 데일리 다이제스트
         </h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          매일 오전 7시, news.kicpa.or.kr에 올라온 새 기사를 요약해드립니다.
+          매일 오전 10시, news.kicpa.or.kr에 올라온 새 기사를 요약해드립니다.
         </p>
       </header>
 
@@ -26,24 +25,12 @@ export default function Home() {
         </p>
       ) : (
         <section>
-          <div className="mb-4 flex items-baseline justify-between">
+          <div className="mb-4">
             <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
               {latestDate} 다이제스트 ({articles.length}건)
             </h2>
-            {dates.length > 1 && (
-              <Link
-                href={`/${dates[1]}`}
-                className="text-xs text-zinc-400 hover:underline dark:text-zinc-500"
-              >
-                이전 기록 보기 →
-              </Link>
-            )}
           </div>
-          <div className="flex flex-col gap-4">
-            {articles.map((article) => (
-              <ArticleCard key={article.idxno} article={article} />
-            ))}
-          </div>
+          <CategoryGroups articles={articles} />
         </section>
       )}
     </main>

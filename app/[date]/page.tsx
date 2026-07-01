@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ArticleCard from "@/components/ArticleCard";
+import CategoryGroups from "@/components/CategoryGroups";
 import { getDigest, getDigestDates } from "@/lib/data";
 
 export function generateStaticParams() {
@@ -41,11 +41,7 @@ export default async function DigestPage({
         </p>
       </header>
 
-      <div className="flex flex-col gap-4">
-        {articles.map((article) => (
-          <ArticleCard key={article.idxno} article={article} />
-        ))}
-      </div>
+      <CategoryGroups articles={articles} />
 
       <div className="mt-8 flex justify-between text-sm">
         {prevDate ? (

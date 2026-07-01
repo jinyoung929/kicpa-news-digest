@@ -6,6 +6,7 @@ export interface Article {
   title: string;
   url: string;
   source: string;
+  category?: string;
   summary: string;
   collectedAt: string;
 }
@@ -28,4 +29,14 @@ export function getDigest(date: string): Article[] {
   } catch {
     return [];
   }
+}
+
+export function groupByCategory(articles: Article[]): [string, Article[]][] {
+  const groups = new Map<string, Article[]>();
+  for (const article of articles) {
+    const category = article.category || "기타";
+    if (!groups.has(category)) groups.set(category, []);
+    groups.get(category)!.push(article);
+  }
+  return Array.from(groups.entries());
 }

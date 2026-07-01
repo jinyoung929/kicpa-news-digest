@@ -10,6 +10,7 @@ const articleUrl = (idxno: string) =>
 const DATA_DIR = path.join(process.cwd(), "data");
 const USER_AGENT = "Mozilla/5.0 (compatible; kicpa-news-digest/1.0; personal-use-script)";
 const REQUEST_DELAY_MS = 700;
+const MAX_ARTICLES_PER_RUN = 10;
 
 interface ListItem {
   idxno: string;
@@ -23,6 +24,7 @@ interface CollectedArticle {
   title: string;
   url: string;
   source: string;
+  category: string;
   summary: string;
   collectedAt: string;
 }
@@ -80,11 +82,13 @@ function parseList(html: string): ListItem[] {
   return items;
 }
 
-function extractBody(html: string): string {
+function extractArticle(html: string): { body: string; category: string } {
   const $ = cheerio.load(html);
   $("#article-view-content-div script, #article-view-content-div style").remove();
-  const text = $("#article-view-content-div").text();
-  return text.replace(/\s+/g, " ").trim();
+  const body = $("#article-view-content-div").text().replace(/\s+/g, " ").trim();
+  // breadcrumb: CPA뉴스 > 대분류(카테고리) > 소분류
+  const category = $("nav.rooted a").eq(1).text().trim() || "기타";
+  return { body, category };
 }
 
 const SUMMARY_MODEL = "gpt-5.4-mini";
@@ -116,8 +120,10 @@ async function main() {
   console.log(`목록에서 ${items.length}건 확인`);
 
   const seen = new Set(await readJson<string[]>("seen.json", []));
-  const newItems = items.filter((item) => !seen.has(item.idxno));
-  console.log(`신규 기사 ${newItems.length}건`);
+  const newItems = items
+    .filter((item) => !seen.has(item.idxno))
+    .slice(0, MAX_ARTICLES_PER_RUN);
+  console.log(`신규 기사 ${newItems.length}건 (최대 ${MAX_ARTICLES_PER_RUN}건까지 처리)`);
 
   const collected: CollectedArticle[] = [];
 
@@ -125,7 +131,7 @@ async function main() {
     const url = articleUrl(item.idxno);
     try {
       const articleHtml = await fetchHtml(url);
-      const body = extractBody(articleHtml);
+      const { body, category } = extractArticle(articleHtml);
       if (!body) {
         console.warn(`본문을 찾을 수 없어 건너뜀: ${url}`);
       } else {
@@ -135,6 +141,7 @@ async function main() {
           title: item.title,
           url,
           source: item.source || "CPA뉴스",
+          category,
           summary,
           collectedAt: new Date().toISOString(),
         });
