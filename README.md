@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CPA뉴스 데일리 다이제스트
 
-## Getting Started
+매일 오전 7시(KST), [news.kicpa.or.kr](https://news.kicpa.or.kr/)에 새로 올라온 기사를 수집해 제목과 3문장 요약으로 정리해 보여주는 사이트입니다.
 
-First, run the development server:
+## 구조
+
+- **웹사이트**: Next.js (App Router). `data/*.json`을 읽어 렌더링합니다.
+  - `app/page.tsx` — 가장 최근 다이제스트
+  - `app/[date]/page.tsx` — 날짜별 히스토리
+- **수집·요약**: `scripts/collect.mts`
+  1. `https://news.kicpa.or.kr/news/articleList.html?view_type=sm` 목록 파싱
+  2. `data/seen.json`과 비교해 신규 기사만 추림
+  3. 기사 본문(`#article-view-content-div`)을 가져와 Gemini API(`gemini-flash-latest`, 무료 티어)로 요약
+  4. `data/YYYY-MM-DD.json`, `data/index.json`, `data/seen.json`에 저장
+- **자동화**: `.github/workflows/daily-digest.yml`이 매일 22:00 UTC(07:00 KST)에 `npm run collect`를 실행하고 결과를 커밋·푸시합니다. Vercel이 해당 저장소를 연결해두면 push마다 자동 재배포됩니다.
+
+## 로컬에서 실행
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.local.example .env.local   # GEMINI_API_KEY 채워넣기 (https://aistudio.google.com/apikey)
+npm run collect                    # 뉴스 수집 + 요약 (data/ 갱신)
+npm run dev                        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 배포
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. GitHub 저장소를 만들고 push
+2. 저장소 Settings → Secrets에 `GEMINI_API_KEY` 등록 (GitHub Actions에서 사용)
+3. Vercel에 이 저장소를 연결 (별도 환경변수 불필요 — 사이트는 이미 요약된 `data/*.json`만 읽습니다)
+4. Actions 탭에서 "Daily CPA News Digest" 워크플로우를 `workflow_dispatch`로 한 번 수동 실행해 정상 동작 확인

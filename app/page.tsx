@@ -1,65 +1,51 @@
-import Image from "next/image";
+import Link from "next/link";
+import ArticleCard from "@/components/ArticleCard";
+import { getDigest, getDigestDates } from "@/lib/data";
+
+export const dynamic = "force-static";
 
 export default function Home() {
+  const dates = getDigestDates();
+  const latestDate = dates[0];
+  const articles = latestDate ? getDigest(latestDate) : [];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-12">
+      <header className="mb-8">
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          CPA뉴스 데일리 다이제스트
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          매일 오전 7시, news.kicpa.or.kr에 올라온 새 기사를 요약해드립니다.
+        </p>
+      </header>
+
+      {!latestDate ? (
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          아직 수집된 다이제스트가 없습니다. 첫 자동 수집이 실행되면 이곳에 표시됩니다.
+        </p>
+      ) : (
+        <section>
+          <div className="mb-4 flex items-baseline justify-between">
+            <h2 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+              {latestDate} 다이제스트 ({articles.length}건)
+            </h2>
+            {dates.length > 1 && (
+              <Link
+                href={`/${dates[1]}`}
+                className="text-xs text-zinc-400 hover:underline dark:text-zinc-500"
+              >
+                이전 기록 보기 →
+              </Link>
+            )}
+          </div>
+          <div className="flex flex-col gap-4">
+            {articles.map((article) => (
+              <ArticleCard key={article.idxno} article={article} />
+            ))}
+          </div>
+        </section>
+      )}
+    </main>
   );
 }
