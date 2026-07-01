@@ -9,6 +9,7 @@ export interface Article {
   category?: string;
   summary: string;
   collectedAt: string;
+  highlightTags?: string[];
 }
 
 const DATA_DIR = path.join(process.cwd(), "data");

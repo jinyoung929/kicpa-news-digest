@@ -29,6 +29,21 @@ interface CollectedArticle {
   category: string;
   summary: string;
   collectedAt: string;
+  highlightTags: string[];
+}
+
+// 회계법인 입사 준비생에게 중요한 뉴스 태그 규칙
+const HIGHLIGHT_RULES: { tag: string; pattern: RegExp }[] = [
+  { tag: "빅4", pattern: /삼일|PwC|삼정|KPMG|한영|딜로이트|안진|Deloitte|EY(?![a-zA-Z])/i },
+  { tag: "한공회", pattern: /한공회|한국공인회계사회/ },
+  { tag: "ESG·AI", pattern: /ESG|인공지능|AI(?![a-zA-Z])/i },
+];
+
+function getHighlightTags(text: string): string[] {
+  const tags = HIGHLIGHT_RULES.filter((rule) => rule.pattern.test(text)).map(
+    (rule) => rule.tag,
+  );
+  return Array.from(new Set(tags));
 }
 
 function sleep(ms: number) {
@@ -149,6 +164,7 @@ async function main() {
         console.warn(`본문을 찾을 수 없어 건너뜀: ${url}`);
       } else {
         const summary = await summarize(client, item.title, body);
+        const highlightTags = getHighlightTags(`${item.title} ${body}`);
         collected.push({
           idxno: item.idxno,
           title: item.title,
@@ -157,6 +173,7 @@ async function main() {
           category,
           summary,
           collectedAt: new Date().toISOString(),
+          highlightTags,
         });
         console.log(`요약 완료: ${item.title}`);
       }
