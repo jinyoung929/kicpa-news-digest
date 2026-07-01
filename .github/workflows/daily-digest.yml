@@ -24,7 +24,7 @@ jobs:
 
       - name: Collect and summarize news
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: npm run collect
 
       - name: Commit updated data

@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
 import fs from "node:fs/promises";
 import path from "node:path";
 
@@ -87,34 +87,28 @@ function extractBody(html: string): string {
   return text.replace(/\s+/g, " ").trim();
 }
 
+const SUMMARY_MODEL = "gpt-5.4-mini";
+
 async function summarize(
-  genAI: GoogleGenerativeAI,
+  client: OpenAI,
   title: string,
   body: string,
 ): Promise<string> {
-  // gemini-flash-latest는 항상 최신 무료 티어 Flash 모델을 가리키는 별칭
-  const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
-  const prompt = [
-    "다음은 회계/세무/경제 분야 뉴스 기사입니다.",
-    "핵심 내용을 한국어 3문장 이내로 간결하게 요약해줘.",
-    "서두나 부연설명 없이 요약 내용만 바로 작성해줘.",
-    "",
-    `제목: ${title}`,
-    "",
-    "본문:",
-    body.slice(0, 6000),
-  ].join("\n");
-
-  const result = await model.generateContent(prompt);
-  return result.response.text().trim();
+  const response = await client.responses.create({
+    model: SUMMARY_MODEL,
+    instructions:
+      "다음은 회계/세무/경제 분야 뉴스 기사입니다. 핵심 내용을 한국어 3문장 이내로 간결하게 요약해줘. 서두나 부연설명 없이 요약 내용만 바로 작성해줘.",
+    input: `제목: ${title}\n\n본문:\n${body.slice(0, 6000)}`,
+  });
+  return response.output_text.trim();
 }
 
 async function main() {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY 환경변수가 설정되어 있지 않습니다.");
+    throw new Error("OPENAI_API_KEY 환경변수가 설정되어 있지 않습니다.");
   }
-  const genAI = new GoogleGenerativeAI(apiKey);
+  const client = new OpenAI({ apiKey });
 
   console.log(`목록 페이지 조회: ${LIST_URL}`);
   const listHtml = await fetchHtml(LIST_URL);
@@ -135,7 +129,7 @@ async function main() {
       if (!body) {
         console.warn(`본문을 찾을 수 없어 건너뜀: ${url}`);
       } else {
-        const summary = await summarize(genAI, item.title, body);
+        const summary = await summarize(client, item.title, body);
         collected.push({
           idxno: item.idxno,
           title: item.title,
