@@ -11,6 +11,8 @@ const DATA_DIR = path.join(process.cwd(), "data");
 const USER_AGENT = "Mozilla/5.0 (compatible; kicpa-news-digest/1.0; personal-use-script)";
 const REQUEST_DELAY_MS = 700;
 const MAX_ARTICLES_PER_RUN = 10;
+const YONHAP_SOURCE = "연합뉴스";
+const MAX_YONHAP_PER_RUN = 5;
 
 interface ListItem {
   idxno: string;
@@ -120,10 +122,21 @@ async function main() {
   console.log(`목록에서 ${items.length}건 확인`);
 
   const seen = new Set(await readJson<string[]>("seen.json", []));
-  const newItems = items
-    .filter((item) => !seen.has(item.idxno))
-    .slice(0, MAX_ARTICLES_PER_RUN);
-  console.log(`신규 기사 ${newItems.length}건 (최대 ${MAX_ARTICLES_PER_RUN}건까지 처리)`);
+  const unseen = items.filter((item) => !seen.has(item.idxno));
+
+  const newItems: ListItem[] = [];
+  let yonhapCount = 0;
+  for (const item of unseen) {
+    if (newItems.length >= MAX_ARTICLES_PER_RUN) break;
+    if (item.source === YONHAP_SOURCE) {
+      if (yonhapCount >= MAX_YONHAP_PER_RUN) continue;
+      yonhapCount++;
+    }
+    newItems.push(item);
+  }
+  console.log(
+    `신규 기사 ${newItems.length}건 처리 (전체 최대 ${MAX_ARTICLES_PER_RUN}건, 연합뉴스 최대 ${MAX_YONHAP_PER_RUN}건)`,
+  );
 
   const collected: CollectedArticle[] = [];
 
