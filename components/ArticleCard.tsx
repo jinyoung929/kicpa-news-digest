@@ -30,6 +30,14 @@ export default function ArticleCard({ article }: { article: Article }) {
       <p className="whitespace-pre-line text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
         {article.summary}
       </p>
+      <a
+        href={article.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:underline dark:text-zinc-400"
+      >
+        원문 보기 ({article.source}) →
+      </a>
     </article>
   );
 }
