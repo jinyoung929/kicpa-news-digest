@@ -29,13 +29,22 @@ jobs:
         run: npm run collect
 
       - name: Commit updated data
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
           if git diff --cached --quiet; then
             echo "No data changes to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "chore: update daily digest data"
             git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      # Vercel의 GitHub 자동배포(push 감지)가 github-actions[bot]의 커밋에는
+      # 안정적으로 반응하지 않는 경우가 있어, Deploy Hook을 직접 호출해 확실히 트리거함
+      - name: Trigger Vercel deploy
+        if: steps.commit.outputs.changed == 'true'
+        run: curl -fsS -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
