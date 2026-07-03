@@ -1,10 +1,9 @@
 name: Daily CPA News Digest
 
 on:
-  schedule:
-    # 01:07 UTC ≈ 10:07 KST. GitHub는 정시(분=0) 스케줄은 부하가 몰려 지연·스킵되기 쉽다고
-    # 공식적으로 경고하므로, 정시를 피해 몇 분 뒤로 오프셋을 둠.
-    - cron: "7 1 * * *"
+  # GitHub의 schedule 트리거는 실제로 며칠간 단 한 번도 발화하지 않는 문제가
+  # 있어 신뢰할 수 없다고 판단, Vercel Cron(/api/cron/collect)이 매일 이
+  # workflow_dispatch를 대신 호출하는 방식으로 전환함. schedule 트리거는 제거.
   workflow_dispatch: {}
 
 permissions:
