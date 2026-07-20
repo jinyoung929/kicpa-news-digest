@@ -1,6 +1,6 @@
 # CPA뉴스 데일리 다이제스트
 
-평일 오전 10시(KST), [news.kicpa.or.kr](https://news.kicpa.or.kr/)에 새로 올라온 기사를 수집하고 OpenAI API로 요약해 보여주는 회계 뉴스 자동화 서비스입니다.
+평일 오전 10시 경(KST), [news.kicpa.or.kr](https://news.kicpa.or.kr/)에 새로 올라온 기사를 수집하고 OpenAI API로 요약해 보여주는 회계 뉴스 자동화 서비스입니다.
 
 회계법인 지원 및 회계 이슈 모니터링 과정에서 반복적으로 수행하던 뉴스 확인 업무를 자동화하기 위해 만들었습니다. 신규 기사 선별, 본문 추출, 3문장 요약, 날짜별 데이터 저장, GitHub Actions 실행, Vercel 배포까지 이어지는 자동화 흐름을 구성했습니다.
 
