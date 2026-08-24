@@ -1,0 +1,51 @@
+[
+  {
+    "idxno": "3765",
+    "title": "Excel 안으로 들어온 AI, KICPA Excel Add-in",
+    "url": "https://news.kicpa.or.kr/news/articleView.html?idxno=3765",
+    "source": "장상수 공인회계사",
+    "category": "이슈&포커스",
+    "summary": "KICPA가 Excel 환경에서 선택한 셀 범위를 AI에 전달해 요약·검토·대사 결과를 엑셀 안에서 바로 반영하는 KICPA Excel Add-in을 선보였으며, OpenAI·Anthropic·Gemini 등 다양한 LLM 연결과 11종 내장 스킬, MCP 외부 연동을 제공한다.  \n실사용 결과 수식 오류, 합계 불일치, 감사 검토 질문 도출 등에서 참조 오류와 1백만원 차이 같은 이상을 찾아내며 업무 시간을 줄일 가능성을 보였다.  \n다만 AI 회신은 감사증거가 아닌 초안이므로, 회계사는 작업 범위를 설계하고 원자료 대조 및 전문가적 판단으로 최종 검토해야 한다.",
+    "collectedAt": "2026-08-24T01:51:21.472Z",
+    "highlightTags": [
+      "빅4",
+      "한공회",
+      "ESG·AI"
+    ]
+  },
+  {
+    "idxno": "3767",
+    "title": "금융사 개인정보 변경 때 한 곳만 바꿔도 일괄 갱신된다",
+    "url": "https://news.kicpa.or.kr/news/articleView.html?idxno=3767",
+    "source": "연합뉴스",
+    "category": "연합뉴스 기사",
+    "summary": "개명이나 주민등록번호 변경 시 금융회사 한 곳에만 가도 다른 금융사의 개인정보가 다음날 자동으로 일괄 갱신되는 제도가 내년 상반기 시행될 예정이다. 이를 위해 행안부는 금융권에 제공하는 변경 정보 범위를 넓히고, 금융위·금감원은 금융회사 간 연계 시스템을 구축한다. 다만 인증서·OTP 등 본인확인 수단은 기존처럼 본인이 직접 재발급받아야 한다.",
+    "collectedAt": "2026-08-24T01:51:25.535Z",
+    "highlightTags": []
+  },
+  {
+    "idxno": "3766",
+    "title": "삼일PwC, 한국거래소와 첫 산업별 회계·세무 세미나 개최",
+    "url": "https://news.kicpa.or.kr/news/articleView.html?idxno=3766",
+    "source": "CPA뉴스",
+    "category": "소식·동정",
+    "summary": "삼일PwC와 한국거래소 중소기업회계지원센터가 K-뷰티·바이오·K-푸드·유통·IT 플랫폼 등 5개 산업별 회계·세무 세미나를 처음 공동 개최했다.  \n이번 세미나에는 187개사 350여 명이 참석했으며, 내년 시행되는 IFRS18의 산업별 영향과 주요 회계·세무 이슈, AI 활용 실무 등을 다뤘다.  \n삼일PwC는 산업별 특화 교육을 정기 프로그램으로 확대하고 가이드북 발간도 지속할 계획이다.",
+    "collectedAt": "2026-08-24T01:51:28.362Z",
+    "highlightTags": [
+      "빅4",
+      "ESG·AI"
+    ]
+  },
+  {
+    "idxno": "3759",
+    "title": "[나도 아는 증여세ㆍ상속세] 올해부터 달라진 고배당 분리과세 핵심 정리",
+    "url": "https://news.kicpa.or.kr/news/articleView.html?idxno=3759",
+    "source": "김지수 담당",
+    "category": "소식·동정",
+    "summary": "올해부터 요건을 갖춘 고배당 기업의 배당소득에 대해 금융소득 종합과세 대신 세제 혜택을 주는 배당소득 분리과세 제도가 새로 시행됐다.  \n배당 투자자가 세금 부담을 줄일 수 있지만, 기존 종합과세와의 차이를 이해하고 적용 요건을 반드시 확인해야 한다.  \n투자 전에는 분리과세 대상 여부와 유의사항을 꼼꼼히 점검하는 것이 중요하다.",
+    "collectedAt": "2026-08-24T01:51:30.707Z",
+    "highlightTags": [
+      "ESG·AI"
+    ]
+  }
+]
